@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CarRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
@@ -30,6 +32,17 @@ class Car
 
     #[ORM\Column]
     private ?float $price = null;
+
+    #[ORM\OneToMany(mappedBy: 'car', targetEntity: Location::class)]
+    private Collection $locations;
+
+    #[ORM\ManyToOne(inversedBy: 'cars')]
+    private ?Dealership $dealership = null;
+
+    public function __construct()
+    {
+        $this->locations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -104,6 +117,48 @@ class Car
     public function setPrice(float $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Location>
+     */
+    public function getLocations(): Collection
+    {
+        return $this->locations;
+    }
+
+    public function addLocation(Location $location): self
+    {
+        if (!$this->locations->contains($location)) {
+            $this->locations->add($location);
+            $location->setCar($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLocation(Location $location): self
+    {
+        if ($this->locations->removeElement($location)) {
+            // set the owning side to null (unless already changed)
+            if ($location->getCar() === $this) {
+                $location->setCar(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDealership(): ?Dealership
+    {
+        return $this->dealership;
+    }
+
+    public function setDealership(?Dealership $dealership): self
+    {
+        $this->dealership = $dealership;
 
         return $this;
     }
