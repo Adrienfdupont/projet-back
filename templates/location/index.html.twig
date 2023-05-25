@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vos locations
+{% endblock %}
+
+{% block body %}
+
+	<h1>Vos locations :</h1>
+
+	<table cellpadding="10">
+		<tr>
+			<th>Début</th>
+			<th>Fin</th>
+			<th>Modèle</th>
+			<th>Facture</th>
+		</tr>
+		{% for location in locations %}
+			<tr>
+				<td>{{location.startDate|date("d/m/Y H:i")}}</td>
+				<td>{{location.endDate|date("d/m/Y H:i")}}</td>
+				<td>{{location.car.brand}}
+					{{location.car.model}}
+				</td>
+				<td>{{location.price}}
+					€</td>
+			</tr>
+		{% endfor %}
+	</table>
+
+
+	<h2>Faire une location:</h2>
+
+	<form action={{ path('form') }} method='POST'>
+		<div>
+			<label>Modèle :</label>
+			<select name='carId'>
+				{% for car in cars %}
+					<option value='{{car.id}}'>{{car.brand}}
+						{{car.model}}</option>
+				{% endfor %}
+			</select>
+		</div>
+
+		<div>
+			<label>Début de location</label>
+			<input name='startDate' type='datetime-local'/>
+		</div>
+
+		<div>
+			<label>Fin de location</label>
+			<input name='endDate' type='datetime-local'/>
+		</div>
+
+		<br>
+
+		<div>
+			<button type='submit'>Faire la demande</button>
+		</div>
+	</form>
+
+{% endblock %}
