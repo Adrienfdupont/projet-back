@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vos locations
+{% endblock %}
+
+{% block body %}
+
+	<h1>Vos locations :</h1>
+
+	<table cellpadding="10">
+		<tr>
+			<th>Début</th>
+			<th>Fin</th>
+			<th>Modèle</th>
+			<th>Facture</th>
+		</tr>
+		{% for location in locations %}
+			<tr>
+				<td>{{location.startDate|date("d/m/Y H:i")}}</td>
+				<td>{{location.endDate|date("d/m/Y H:i")}}</td>
+				<td>{{location.car.brand}}
+					{{location.car.model}}
+				</td>
+				<td>{{location.price}}
+					€</td>
+			</tr>
+		{% endfor %}
+	</table>
+
+
+	<h2>Faire une location:</h2>
+
+	{{form(locationForm)}}{% endblock %}
